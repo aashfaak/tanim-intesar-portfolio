@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { createDoc, updateDocById } from "@/lib/collections";
 import type { TravelPost } from "@/lib/types";
 import { FormField, fieldClass } from "@/components/admin/FormField";
+import { ImageUpload } from "@/components/admin/ImageUpload";
 
 type FormValues = Omit<TravelPost, "id">;
 
@@ -58,6 +59,7 @@ export function TravelForm({
     initial ? imagesToText(initial.images) : ""
   );
   const [saving, setSaving] = useState(false);
+  const [uploadingImage, setUploadingImage] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   function update<K extends keyof FormValues>(key: K, value: FormValues[K]) {
@@ -69,6 +71,7 @@ export function TravelForm({
     setSaving(true);
     setError(null);
     try {
+      if (!values.coverImage.trim()) throw new Error("Upload a cover image or add its URL.");
       const payload: FormValues = {
         ...values,
         slug: values.slug.trim() ? slugify(values.slug) : slugify(values.title),
@@ -134,9 +137,14 @@ export function TravelForm({
         </FormField>
       </div>
 
-      <FormField label="Cover image URL">
+      <ImageUpload
+        label="Upload cover image"
+        onUploaded={(url) => update("coverImage", url)}
+        onUploadingChange={setUploadingImage}
+      />
+
+      <FormField label="Cover image URL (optional)">
         <input
-          required
           className={fieldClass}
           value={values.coverImage}
           onChange={(e) => update("coverImage", e.target.value)}
@@ -188,6 +196,16 @@ export function TravelForm({
         />
       </FormField>
 
+      <ImageUpload
+        label="Upload additional photo"
+        onUploaded={(url) =>
+          setImagesText((current) =>
+            current ? `${current}\n${url} | ` : `${url} | `
+          )
+        }
+        onUploadingChange={setUploadingImage}
+      />
+
       <label className="flex items-center gap-2 text-sm text-ink">
         <input
           type="checkbox"
@@ -202,7 +220,7 @@ export function TravelForm({
       <div className="flex items-center gap-3">
         <button
           type="submit"
-          disabled={saving}
+          disabled={saving || uploadingImage}
           className="bg-navy text-paper px-5 py-2.5 text-sm hover:bg-navy-light transition-colors disabled:opacity-60"
         >
           {saving ? "Saving…" : postId ? "Save changes" : "Publish story"}

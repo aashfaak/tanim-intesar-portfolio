@@ -6,6 +6,7 @@ import { createDoc, updateDocById } from "@/lib/collections";
 import type { BlogPost } from "@/lib/types";
 import { blogCategories } from "@/lib/types";
 import { FormField, fieldClass } from "@/components/admin/FormField";
+import { ImageUpload } from "@/components/admin/ImageUpload";
 
 type FormValues = Omit<BlogPost, "id">;
 
@@ -39,6 +40,7 @@ export function BlogForm({
     }
   );
   const [saving, setSaving] = useState(false);
+  const [uploadingImage, setUploadingImage] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   function update<K extends keyof FormValues>(key: K, value: FormValues[K]) {
@@ -50,6 +52,7 @@ export function BlogForm({
     setSaving(true);
     setError(null);
     try {
+      if (!values.image.trim()) throw new Error("Upload a cover image or add its URL.");
       const payload: FormValues = {
         ...values,
         slug: values.slug.trim() ? slugify(values.slug) : slugify(values.title),
@@ -130,9 +133,14 @@ export function BlogForm({
         />
       </FormField>
 
-      <FormField label="Cover image URL">
+      <ImageUpload
+        label="Upload cover image"
+        onUploaded={(url) => update("image", url)}
+        onUploadingChange={setUploadingImage}
+      />
+
+      <FormField label="Cover image URL (optional)">
         <input
-          required
           className={fieldClass}
           value={values.image}
           onChange={(e) => update("image", e.target.value)}
@@ -182,7 +190,7 @@ export function BlogForm({
       <div className="flex items-center gap-3">
         <button
           type="submit"
-          disabled={saving}
+          disabled={saving || uploadingImage}
           className="bg-navy text-paper px-5 py-2.5 text-sm hover:bg-navy-light transition-colors disabled:opacity-60"
         >
           {saving ? "Saving…" : postId ? "Save changes" : "Publish article"}

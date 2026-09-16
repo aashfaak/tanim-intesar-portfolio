@@ -1,18 +1,18 @@
 export const site = {
-  name: "TANIM Intesar",
+  name: "Tanim Intesar",
   shortName: "INTESAR",
   tagline: "Student. Observer. Learner.",
   role: "IBA Student",
   url: "https://tanimintesar.example.com",
   description:
     "A running record of university life, ideas, travel, and the things worth thinking about — written by an IBA student.",
-  email: "hello@ashfakrahman.example.com",
+  email: "hello@tanimintesar.example.com",
   nav: [
     { label: "About", href: "/about" },
     { label: "Journal", href: "/journal" },
     { label: "Travel", href: "/travel" },
     { label: "Blog", href: "/blog" },
-    { label: "Contact", href: "/contact" },
+   
   ],
   social: [
     { label: "Instagram", href: "https://www.instagram.com/tanim.015?stkn=MXF2a2ZmOTdxYjJqZQ==" },

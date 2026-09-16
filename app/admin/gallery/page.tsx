@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import { Trash2 } from "lucide-react";
+import { Loader2, Trash2, Upload } from "lucide-react";
 import {
   getAllGalleryDocs,
   createDoc,
@@ -24,6 +24,7 @@ const emptyForm: FormValues = {
 export default function AdminGalleryPage() {
   const [images, setImages] = useState<GalleryImage[] | null>(null);
   const [form, setForm] = useState<FormValues>(emptyForm);
+  const [file, setFile] = useState<File | null>(null);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -36,16 +37,47 @@ export default function AdminGalleryPage() {
     load();
   }, []);
 
+  async function uploadImage(image: File) {
+    const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
+    const uploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
+
+    if (!cloudName || !uploadPreset) {
+      throw new Error("Cloudinary isn't configured yet.");
+    }
+
+    const uploadData = new FormData();
+    uploadData.append("file", image);
+    uploadData.append("upload_preset", uploadPreset);
+    uploadData.append("folder", "portfolio/gallery");
+
+    const response = await fetch(
+      `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
+      { method: "POST", body: uploadData }
+    );
+    const result = (await response.json()) as { secure_url?: string; error?: { message?: string } };
+
+    if (!response.ok || !result.secure_url) {
+      throw new Error(result.error?.message || "Image upload failed.");
+    }
+
+    return result.secure_url;
+  }
+
   async function handleAdd(e: React.FormEvent) {
     e.preventDefault();
     setSaving(true);
     setError(null);
     try {
-      await createDoc("gallery", form);
+      const src = file ? await uploadImage(file) : form.src;
+      if (!src) throw new Error("Choose an image or add an image URL.");
+      await createDoc("gallery", { ...form, src });
       setForm(emptyForm);
+      setFile(null);
+      const fileInput = document.getElementById("gallery-image-file") as HTMLInputElement | null;
+      if (fileInput) fileInput.value = "";
       load();
     } catch (err) {
-      setError("Couldn't add that photo — please try again.");
+      setError(err instanceof Error ? err.message : "Couldn't add that photo — please try again.");
       console.error(err);
     } finally {
       setSaving(false);
@@ -68,9 +100,27 @@ export default function AdminGalleryPage() {
       >
         <h2 className="font-serif text-xl text-ink">Add a photo</h2>
 
-        <FormField label="Image URL">
+        <FormField label="Upload image" hint="JPG, PNG, WebP, or GIF — maximum 5 MB.">
           <input
-            required
+            id="gallery-image-file"
+            type="file"
+            accept="image/jpeg,image/png,image/webp,image/gif"
+            className={fieldClass}
+            onChange={(e) => {
+              const selectedFile = e.target.files?.[0] || null;
+              if (selectedFile && selectedFile.size > 5 * 1024 * 1024) {
+                setError("Choose an image smaller than 5 MB.");
+                e.target.value = "";
+                return;
+              }
+              setError(null);
+              setFile(selectedFile);
+            }}
+          />
+        </FormField>
+
+        <FormField label="Image URL (optional)" hint="Use this only when you already have a hosted image link.">
+          <input
             className={fieldClass}
             value={form.src}
             onChange={(e) => setForm((f) => ({ ...f, src: e.target.value }))}
@@ -132,7 +182,11 @@ export default function AdminGalleryPage() {
           disabled={saving}
           className="bg-navy text-paper px-5 py-2.5 text-sm hover:bg-navy-light transition-colors disabled:opacity-60"
         >
-          {saving ? "Adding…" : "Add photo"}
+          {saving ? (
+            <span className="inline-flex items-center gap-2"><Loader2 size={16} className="animate-spin" /> Uploading…</span>
+          ) : (
+            <span className="inline-flex items-center gap-2"><Upload size={16} /> Add photo</span>
+          )}
         </button>
       </form>
 

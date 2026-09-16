@@ -55,10 +55,10 @@ export function Footer() {
       </div>
 
       <div className="border-t border-line">
-        <div className="container-editorial py-6 text-xs text-muted">
-          © {new Date().getFullYear()} {site.name}. All rights reserved.
-        </div>
-      </div>
+  <div className="container-editorial py-6 text-xs text-muted text-center">
+    © {new Date().getFullYear()} Tanim Intesar. All rights reserved.
+  </div>
+</div>
     </footer>
   );
 }

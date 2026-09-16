@@ -23,7 +23,7 @@ export function Hero() {
             transition={{ duration: 0.6 }}
             className="text-xs tracking-wide text-muted mb-6"
           >
-            IBA Student · Business · Life · Ideas
+            Student · Business · Life · Ideas
           </motion.p>
 
           <motion.h1
