@@ -13,7 +13,7 @@ import {
   signOut,
   type User,
 } from "firebase/auth";
-import { auth } from "./firebase";
+import { getFirebaseAuth } from "./firebase";
 
 type AuthContextValue = {
   user: User | null;
@@ -29,6 +29,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // Firebase is resolved inside the effect so that rendering on the server
+    // (including build-time prerendering) never initializes the SDK.
+    const auth = getFirebaseAuth();
+    if (!auth) {
+      setLoading(false);
+      return;
+    }
     const unsubscribe = onAuthStateChanged(auth, (u) => {
       setUser(u);
       setLoading(false);
@@ -36,12 +43,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return unsubscribe;
   }, []);
 
+  function requireAuth() {
+    const auth = getFirebaseAuth();
+    if (!auth) {
+      throw new Error(
+        "Firebase is not configured. Set the NEXT_PUBLIC_FIREBASE_* environment variables to sign in."
+      );
+    }
+    return auth;
+  }
+
   async function login(email: string, password: string) {
-    await signInWithEmailAndPassword(auth, email, password);
+    await signInWithEmailAndPassword(requireAuth(), email, password);
   }
 
   async function logout() {
-    await signOut(auth);
+    await signOut(requireAuth());
   }
 
   return (

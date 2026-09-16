@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth-context";
+import { isFirebaseConfigured } from "@/lib/firebase";
 
 export default function AdminLoginPage() {
   const { login } = useAuth();
@@ -20,7 +21,11 @@ export default function AdminLoginPage() {
       await login(email, password);
       router.replace("/admin");
     } catch {
-      setError("That email or password wasn't recognized. Please try again.");
+      setError(
+        isFirebaseConfigured
+          ? "That email or password wasn't recognized. Please try again."
+          : "Sign-in is unavailable because Firebase isn't configured for this site yet."
+      );
     } finally {
       setSubmitting(false);
     }
@@ -36,6 +41,14 @@ export default function AdminLoginPage() {
         <p className="text-sm text-muted mb-6">
           Manage journal, travel, blog, and gallery content.
         </p>
+
+        {!isFirebaseConfigured && (
+          <p className="text-sm text-ink border border-line bg-surface p-3 mb-6">
+            Firebase isn&apos;t configured for this site yet, so content and
+            sign-in are unavailable. Add the NEXT_PUBLIC_FIREBASE_* environment
+            variables to enable them.
+          </p>
+        )}
 
         <div className="space-y-4">
           <div>
