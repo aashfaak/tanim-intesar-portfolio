@@ -10,7 +10,8 @@ import {
   where,
   orderBy,
 } from "firebase/firestore";
-import { db } from "./firebase";
+import type { DocumentData, Firestore } from "firebase/firestore";
+import { getDb } from "./firebase";
 
 // Collection names in Firestore. Create these (or let them be created
 // automatically on first write) in the Firebase console.
@@ -23,9 +24,22 @@ export const COLLECTIONS = {
 
 type CollectionKey = keyof typeof COLLECTIONS;
 
+// Writes cannot be faked, so they fail loudly when Firebase isn't configured.
+function requireDb(): Firestore {
+  const db = getDb();
+  if (!db) {
+    throw new Error(
+      "Firebase is not configured. Set the NEXT_PUBLIC_FIREBASE_* environment variables to read and write content."
+    );
+  }
+  return db;
+}
+
 // Generic helpers. `T` should NOT include `id` — Firestore's document id is
 // attached separately when reading.
 export async function getAllDocs<T>(key: CollectionKey): Promise<(T & { id: string })[]> {
+  const db = getDb();
+  if (!db) return [];
   const snap = await getDocs(
     query(collection(db, COLLECTIONS[key]), orderBy("date", "desc"))
   );
@@ -36,6 +50,8 @@ export async function getDocById<T>(
   key: CollectionKey,
   id: string
 ): Promise<(T & { id: string }) | null> {
+  const db = getDb();
+  if (!db) return null;
   const snap = await getDoc(doc(db, COLLECTIONS[key], id));
   if (!snap.exists()) return null;
   return { id: snap.id, ...(snap.data() as T) };
@@ -45,16 +61,19 @@ export async function getDocBySlug<T>(
   key: CollectionKey,
   slug: string
 ): Promise<(T & { id: string }) | null> {
+  const db = getDb();
+  if (!db) return null;
   const snap = await getDocs(
     query(collection(db, COLLECTIONS[key]), where("slug", "==", slug))
   );
   if (snap.empty) return null;
   const d = snap.docs[0];
+  if (!d) return null;
   return { id: d.id, ...(d.data() as T) };
 }
 
 export async function createDoc<T extends object>(key: CollectionKey, data: T) {
-  const ref = await addDoc(collection(db, COLLECTIONS[key]), data);
+  const ref = await addDoc(collection(requireDb(), COLLECTIONS[key]), data);
   return ref.id;
 }
 
@@ -63,15 +82,17 @@ export async function updateDocById<T extends object>(
   id: string,
   data: Partial<T>
 ) {
-  await updateDoc(doc(db, COLLECTIONS[key], id), data);
+  await updateDoc(doc(requireDb(), COLLECTIONS[key], id), data as DocumentData);
 }
 
 export async function deleteDocById(key: CollectionKey, id: string) {
-  await deleteDoc(doc(db, COLLECTIONS[key], id));
+  await deleteDoc(doc(requireDb(), COLLECTIONS[key], id));
 }
 
 // Gallery has no `date` field to sort by — fetch without ordering.
 export async function getAllGalleryDocs<T>(): Promise<(T & { id: string })[]> {
+  const db = getDb();
+  if (!db) return [];
   const snap = await getDocs(collection(db, COLLECTIONS.gallery));
   return snap.docs.map((d) => ({ id: d.id, ...(d.data() as T) }));
 }

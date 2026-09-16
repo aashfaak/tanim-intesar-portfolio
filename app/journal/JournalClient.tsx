@@ -59,17 +59,19 @@ export function JournalClient() {
 
   return (
     <>
-      <section className="container-editorial pb-16">
-        <FeaturedPost
-          href={`/journal/${featured.slug}`}
-          image={featured.image}
-          category={featured.category}
-          date={featured.date}
-          title={featured.title}
-          excerpt={featured.excerpt}
-          meta={featured.readingTime}
-        />
-      </section>
+      {featured && (
+        <section className="container-editorial pb-16">
+          <FeaturedPost
+            href={`/journal/${featured.slug}`}
+            image={featured.image}
+            category={featured.category}
+            date={featured.date}
+            title={featured.title}
+            excerpt={featured.excerpt}
+            meta={featured.readingTime}
+          />
+        </section>
+      )}
 
       <section className="container-editorial pb-10">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-y border-line py-4">

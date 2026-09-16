@@ -42,9 +42,11 @@ export default function TravelPage() {
         </section>
       ) : (
         <>
-          <section className="container-editorial pb-12">
-            <TravelCard post={featured} size="large" />
-          </section>
+          {featured && (
+            <section className="container-editorial pb-12">
+              <TravelCard post={featured} size="large" />
+            </section>
+          )}
 
           <section className="container-editorial pb-24">
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">

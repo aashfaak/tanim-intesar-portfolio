@@ -30,7 +30,7 @@ function textToImages(text: string): TravelPost["images"] {
     .filter(Boolean)
     .map((line) => {
       const [src, ...rest] = line.split("|");
-      return { src: src.trim(), caption: rest.join("|").trim() };
+      return { src: (src ?? "").trim(), caption: rest.join("|").trim() };
     });
 }
 
