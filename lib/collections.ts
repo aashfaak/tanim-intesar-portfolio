@@ -64,13 +64,14 @@ export async function updateDocById<T extends object>(
   id: string,
   data: Partial<T>
 ) {
-  await updateDoc(doc(db, COLLECTIONS[key], id), data);
+  const ref = doc(db, COLLECTIONS[key], id);
+  await updateDoc(ref as any, data as any);
 }
 
 export async function deleteDocById(key: CollectionKey, id: string) {
-  await deleteDoc(doc(db, COLLECTIONS[key], id));
+  const ref = doc(db, COLLECTIONS[key], id);
+  await deleteDoc(ref as any);
 }
-
 // Gallery has no `date` field to sort by — fetch without ordering.
 export async function getAllGalleryDocs<T>(): Promise<(T & { id: string })[]> {
   const snap = await getDocs(collection(db, COLLECTIONS.gallery));
