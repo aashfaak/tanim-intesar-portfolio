@@ -3,10 +3,10 @@ export const site = {
   shortName: "INTESAR",
   tagline: "Student. Observer. Learner.",
   role: "IBA Student",
-  url: "https://tanimintesar.example.com",
+  url: "https://formspree.io/f/xkjgnken",
   description:
     "A running record of university life, ideas, travel, and the things worth thinking about — written by an IBA student.",
-  email: "hello@tanimintesar.example.com",
+  email: "tanimintesar4@gmail.com",
   nav: [
     { label: "About", href: "/about" },
     { label: "Journal", href: "/journal" },
@@ -16,7 +16,7 @@ export const site = {
   ],
   social: [
     { label: "Instagram", href: "https://www.instagram.com/tanim.015?stkn=MXF2a2ZmOTdxYjJqZQ==" },
-    { label: "LinkedIn", href: "https://linkedin.com/" },
+    { label: "LinkedIn", href: "https://bd.linkedin.com/in/md-tanim-intesar-896025280" },
     { label: "Facebook", href: "https://www.facebook.com/profile.php?id=61578486527634" },
   ],
   currently: [

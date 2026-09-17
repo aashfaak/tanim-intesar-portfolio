@@ -29,7 +29,7 @@ export default function AboutPage() {
         <div className="grid md:grid-cols-[1fr_1.2fr] gap-10 md:gap-16 items-start">
           <ScrollReveal className="relative aspect-[4/5] overflow-hidden bg-surface">
             <Image
-              src="https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?q=80&w=1200&auto=format&fit=crop"
+              src="/about.png"
               alt="A quiet study corner with books and morning light"
               fill
               sizes="(min-width: 768px) 40vw, 90vw"
@@ -39,10 +39,12 @@ export default function AboutPage() {
 
           <ScrollReveal delay={0.1} className="prose-article">
             <p>
-              I&apos;m currently studying business and management at IBA,
-              somewhere in the stretch of a degree where the big questions —
-              what I want to do, what I actually believe about work and
-              ambition — have started to feel less abstract and more urgent.
+              I'm Tanim Intesar, a student at the Army Institute of Business Administration-AIBA, Sylhet, Bangladesh
+               driven by curiosity, creativity, and a passion for continuous growth.
+
+              I enjoy exploring the intersection of business, innovation, and technology,
+               turning ideas into meaningful possibilities. Always learning, building, and 
+               looking for new ways to make an impact.
             </p>
             <p>
               This site started as a way to keep a record of that stretch.
@@ -53,26 +55,21 @@ export default function AboutPage() {
             </p>
             <h2>What I care about</h2>
             <p>
-              I&apos;m interested in the practical side of business — how
-              decisions actually get made under uncertainty — as much as the
-              theory of it. Outside coursework, I read more fiction than most
-              of my classmates, and I&apos;m slowly building the habit of
-              writing things down before I&apos;ve fully worked out what I
-              think about them.
+              I'm interested in the practical side of business—how decisions are made, how people think, and how ideas become something useful. I enjoy looking beyond theories to understand the real-world challenges behind them.
+
+              I'm also drawn to creativity, innovation, and the small details that make a project or an experience meaningful. For me, growth is not only about achieving something big, but also about staying curious and improving consistently.
             </p>
             <h2>What I&apos;m learning right now</h2>
             <p>
-              This term, that&apos;s digital strategy and a genuine attempt
-              at consistency — showing up to write, even when there&apos;s
-              nothing dramatic to report. Most entries here are ordinary on
-              purpose.
+              Right now, I'm focused on strengthening my understanding of business, exploring new perspectives, and developing skills that connect academic knowledge with practical experience.
+
+              I'm learning to approach problems with more clarity, communicate ideas more effectively, and stay consistent even when progress feels gradual. Every new experience is an opportunity to understand something a little better.
             </p>
             <h2>Where this is headed</h2>
             <p>
-              I don&apos;t have a five-year plan I fully believe in yet. What
-              I do have is a habit of documenting the in-between — university,
-              travel, ideas, books — and a hope that it adds up to something
-              worth looking back on.
+             I don't have every step of the future mapped out—and I'm comfortable with that. What I do have is a willingness to explore, learn, and take on meaningful challenges.
+
+              Whether it's through business, innovation, or future projects, I hope to keep building a path that reflects my interests, values, and curiosity. This portfolio is a small part of that journey, and I'm looking forward to seeing where it leads.
             </p>
           </ScrollReveal>
         </div>
