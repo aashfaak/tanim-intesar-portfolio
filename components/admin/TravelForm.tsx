@@ -29,8 +29,10 @@ function textToImages(text: string): TravelPost["images"] {
     .map((line) => line.trim())
     .filter(Boolean)
     .map((line) => {
-      const [src, ...rest] = line.split("|");
-      return { src: src.trim(), caption: rest.join("|").trim() };
+      const parts = line.split("|");
+      const src = parts[0]?.trim() ?? "";
+      const caption = parts.slice(1).join("|").trim();
+      return { src, caption };
     });
 }
 
