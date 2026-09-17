@@ -30,12 +30,11 @@ function textToImages(text: string): TravelPost["images"] {
     .filter(Boolean)
     .map((line) => {
       const parts = line.split("|");
-      const src = parts[0]?.trim() ?? "";
+      const src = parts[0] ? parts[0].trim() : "";
       const caption = parts.slice(1).join("|").trim();
       return { src, caption };
     });
 }
-
 export function TravelForm({
   initial,
   postId,
