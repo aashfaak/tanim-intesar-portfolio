@@ -29,7 +29,7 @@ export default function AboutPage() {
         <div className="grid md:grid-cols-[1fr_1.2fr] gap-10 md:gap-16 items-start">
           <ScrollReveal className="relative aspect-[4/5] overflow-hidden bg-surface">
             <Image
-              src="/about.png"
+              src="/about.jpeg"
               alt="A quiet study corner with books and morning light"
               fill
               sizes="(min-width: 768px) 40vw, 90vw"
