@@ -17,8 +17,6 @@ function slugify(value: string) {
     .replace(/\s+/g, "-");
 }
 
-// Images are edited as plain lines of "url | caption" to keep the form
-// simple — no separate repeating-field UI needed.
 function imagesToText(images: TravelPost["images"]) {
   return images.map((img) => `${img.src} | ${img.caption}`).join("\n");
 }
@@ -35,6 +33,7 @@ function textToImages(text: string): TravelPost["images"] {
       return { src, caption };
     });
 }
+
 export function TravelForm({
   initial,
   postId,
