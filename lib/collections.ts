@@ -50,6 +50,7 @@ export async function getDocBySlug<T>(
   );
   if (snap.empty) return null;
   const d = snap.docs[0];
+  if (!d) return null;
   return { id: d.id, ...(d.data() as T) };
 }
 
